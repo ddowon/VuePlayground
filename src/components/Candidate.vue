@@ -1,946 +1,139 @@
 <template>
-	<div class="container-wrap sub-page">
-		<div class="candidate-page">
-			<CandidateTab/>
-			<CandidateCatecory/>
-			<CandidateList/>
-		</div>
+	<div class="candidate-page">
+		<CandidateTab
+			:tabList="tabList"
+			:currentDivision="currentDivision"
+			@changeDivision="setDivision" />
+		<CandidateCategory
+			:prizeList="currentTab.prizes"
+			:currentPrize="currentPrize"
+			@changePrize="setPrize" />
+		<CandidateList
+			:currentTab="currentTab"
+			:currentPrize="currentPrize" />
 	</div>
 </template>
 
 <script>
+	// import { mapState, mapActions, mapGetters } from 'vuex'
 	import { Fragment } from 'vue-fragment'
 	import CandidateTab from '@/components/CandidateTab.vue'
-	import CandidateCatecory from '@/components/CandidateCatecory.vue'
+	import CandidateCategory from '@/components/CandidateCategory.vue'
 	import CandidateList from '@/components/CandidateList.vue'
 	export default {
 		name: 'candidate',
 		components: {
-			Fragment, CandidateTab, CandidateCatecory, CandidateList
-		},
-		props: {
+			Fragment, CandidateTab, CandidateCategory, CandidateList
 		},
 		data: () => ({
-			candidateList: [
-				{
-					"ORD": 1,
-					"CANDIDATE_ID": 301,
-					"PROGRAM_NM": "동백꽃 필 무렵",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T01",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "KBS",
-					"PRIZE_NM": "드라마 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/01.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 2,
-					"CANDIDATE_ID": 302,
-					"PROGRAM_NM": "사랑의 불시착",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T01",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "tvN",
-					"PRIZE_NM": "드라마 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/02.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 3,
-					"CANDIDATE_ID": 303,
-					"PROGRAM_NM": "스토브리그",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T01",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "SBS",
-					"PRIZE_NM": "드라마 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/03.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 4,
-					"CANDIDATE_ID": 304,
-					"PROGRAM_NM": "킹덤2",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T01",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "넷플릭스",
-					"PRIZE_NM": "드라마 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/04.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 5,
-					"CANDIDATE_ID": 305,
-					"PROGRAM_NM": "하이에나",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T01",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "SBS",
-					"PRIZE_NM": "드라마 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/05.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 6,
-					"CANDIDATE_ID": 306,
-					"PROGRAM_NM": "구해줘 홈즈",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T02",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "MBC",
-					"PRIZE_NM": "예능 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/06.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 7,
-					"CANDIDATE_ID": 307,
-					"PROGRAM_NM": "놀면 뭐하니?",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T02",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "MBC",
-					"PRIZE_NM": "예능 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/07.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 8,
-					"CANDIDATE_ID": 308,
-					"PROGRAM_NM": "맛남의 광장",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T02",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "SBS",
-					"PRIZE_NM": "예능 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/08.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 9,
-					"CANDIDATE_ID": 309,
-					"PROGRAM_NM": "내일은 미스터트롯",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T02",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "TV조선",
-					"PRIZE_NM": "예능 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/09.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 10,
-					"CANDIDATE_ID": 310,
-					"PROGRAM_NM": "신서유기 외전",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T02",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "tvN",
-					"PRIZE_NM": "예능 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/10.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 11,
-					"CANDIDATE_ID": 311,
-					"PROGRAM_NM": "다큐 인사이트 - 아카이브 프로젝트 모던코리아",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T03",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "KBS",
-					"PRIZE_NM": "교양 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/11.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 12,
-					"CANDIDATE_ID": 312,
-					"PROGRAM_NM": "요즘책방 : 책 읽어드립니다",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T03",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "tvN",
-					"PRIZE_NM": "교양 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/12.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 13,
-					"CANDIDATE_ID": 313,
-					"PROGRAM_NM": "자이언트펭TV",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T03",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "EBS",
-					"PRIZE_NM": "교양 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/13.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 14,
-					"CANDIDATE_ID": 314,
-					"PROGRAM_NM": "PD수첩 - 검찰기자단",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T03",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "MBC",
-					"PRIZE_NM": "교양 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/14.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 15,
-					"CANDIDATE_ID": 315,
-					"PROGRAM_NM": "SBS 스페셜 - 요한 씨돌 용현",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T03",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "SBS",
-					"PRIZE_NM": "교양 작품상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/15.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 16,
-					"CANDIDATE_ID": 316,
-					"PROGRAM_NM": "김성윤",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T04",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "이태원 클라쓰",
-					"PRIZE_NM": "연출상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/16.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 17,
-					"CANDIDATE_ID": 317,
-					"PROGRAM_NM": "모완일",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T04",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "부부의 세계",
-					"PRIZE_NM": "연출상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/17.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 18,
-					"CANDIDATE_ID": 318,
-					"PROGRAM_NM": "이정효",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T04",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "사랑의 불시착",
-					"PRIZE_NM": "연출상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/18.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 19,
-					"CANDIDATE_ID": 319,
-					"PROGRAM_NM": "정동윤",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T04",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "스토브리그",
-					"PRIZE_NM": "연출상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/19.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 20,
-					"CANDIDATE_ID": 320,
-					"PROGRAM_NM": "차영훈",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T04",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "동백꽃 필 무렵",
-					"PRIZE_NM": "연출상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/20.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 21,
-					"CANDIDATE_ID": 321,
-					"PROGRAM_NM": "김루리",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T05",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "하이에나",
-					"PRIZE_NM": "극본상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/21.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 22,
-					"CANDIDATE_ID": 322,
-					"PROGRAM_NM": "박지은",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T05",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "사랑의 불시착",
-					"PRIZE_NM": "극본상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/22.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 23,
-					"CANDIDATE_ID": 323,
-					"PROGRAM_NM": "이신화",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T05",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "스토브리그",
-					"PRIZE_NM": "극본상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/23.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 24,
-					"CANDIDATE_ID": 324,
-					"PROGRAM_NM": "이우정",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T05",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "슬기로운 의사생활",
-					"PRIZE_NM": "극본상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/24.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 25,
-					"CANDIDATE_ID": 325,
-					"PROGRAM_NM": "임상춘",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T05",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "동백꽃 필 무렵",
-					"PRIZE_NM": "극본상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/25.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 26,
-					"CANDIDATE_ID": 326,
-					"PROGRAM_NM": "김남식 류건희",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T06",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "킹덤2/VFX",
-					"PRIZE_NM": "예술상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/26.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 27,
-					"CANDIDATE_ID": 327,
-					"PROGRAM_NM": "김지수",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T06",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "쌉니다 천리마마트/미술",
-					"PRIZE_NM": "예술상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/27.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 28,
-					"CANDIDATE_ID": 328,
-					"PROGRAM_NM": "박성일",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T06",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "이태원 클라쓰/음악",
-					"PRIZE_NM": "예술상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/28.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 29,
-					"CANDIDATE_ID": 329,
-					"PROGRAM_NM": "박지현",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T06",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "유 퀴즈 온 더 블럭/VJ·촬영",
-					"PRIZE_NM": "예술상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/29.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 30,
-					"CANDIDATE_ID": 330,
-					"PROGRAM_NM": "장연옥",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T06",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "대탈출3/미술",
-					"PRIZE_NM": "예술상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/30.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 31,
-					"CANDIDATE_ID": 331,
-					"PROGRAM_NM": "강하늘",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T07",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "동백꽃 필 무렵",
-					"PRIZE_NM": "남자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/31.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 32,
-					"CANDIDATE_ID": 332,
-					"PROGRAM_NM": "남궁민",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T07",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "스토브리그",
-					"PRIZE_NM": "남자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/32.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 33,
-					"CANDIDATE_ID": 333,
-					"PROGRAM_NM": "박서준",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T07",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "이태원 클라쓰",
-					"PRIZE_NM": "남자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/33.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 34,
-					"CANDIDATE_ID": 334,
-					"PROGRAM_NM": "주지훈",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T07",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "하이에나",
-					"PRIZE_NM": "남자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/34.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 35,
-					"CANDIDATE_ID": 335,
-					"PROGRAM_NM": "현빈",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T07",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "사랑의 불시착",
-					"PRIZE_NM": "남자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/35.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 36,
-					"CANDIDATE_ID": 336,
-					"PROGRAM_NM": "공효진",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T08",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "동백꽃 필 무렵",
-					"PRIZE_NM": "여자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/36.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 37,
-					"CANDIDATE_ID": 337,
-					"PROGRAM_NM": "김혜수",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T08",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "하이에나",
-					"PRIZE_NM": "여자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/37.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 38,
-					"CANDIDATE_ID": 338,
-					"PROGRAM_NM": "김희애",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T08",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "부부의 세계",
-					"PRIZE_NM": "여자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/38.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 39,
-					"CANDIDATE_ID": 339,
-					"PROGRAM_NM": "손예진",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T08",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "사랑의 불시착",
-					"PRIZE_NM": "여자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/39.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 40,
-					"CANDIDATE_ID": 340,
-					"PROGRAM_NM": "이지은",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T08",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "호텔 델루나",
-					"PRIZE_NM": "여자 최우수 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/40.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 41,
-					"CANDIDATE_ID": 341,
-					"PROGRAM_NM": "김영민",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T09",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "부부의 세계",
-					"PRIZE_NM": "남자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/41.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 42,
-					"CANDIDATE_ID": 342,
-					"PROGRAM_NM": "양경원",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T09",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "사랑의 불시착",
-					"PRIZE_NM": "남자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/42.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 43,
-					"CANDIDATE_ID": 343,
-					"PROGRAM_NM": "오정세",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T09",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "동백꽃 필 무렵",
-					"PRIZE_NM": "남자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/43.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 44,
-					"CANDIDATE_ID": 344,
-					"PROGRAM_NM": "유재명",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T09",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "이태원 클라쓰",
-					"PRIZE_NM": "남자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/44.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 45,
-					"CANDIDATE_ID": 345,
-					"PROGRAM_NM": "전석호",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T09",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "하이에나",
-					"PRIZE_NM": "남자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/45.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{	"ORD": 46,
-					"CANDIDATE_ID": 346,
-					"PROGRAM_NM": "권나라",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T10",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "이태원 클라쓰",
-					"PRIZE_NM": "여자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/46.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 47,
-					"CANDIDATE_ID": 347,
-					"PROGRAM_NM": "김선영",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T10",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "사랑의 불시착",
-					"PRIZE_NM": "여자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/47.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 48,
-					"CANDIDATE_ID": 348,
-					"PROGRAM_NM": "서지혜",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T10",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "사랑의 불시착",
-					"PRIZE_NM": "여자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/48.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 49,
-					"CANDIDATE_ID": 349,
-					"PROGRAM_NM": "손담비",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T10",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "동백꽃 필 무렵",
-					"PRIZE_NM": "여자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/49.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 50,
-					"CANDIDATE_ID": 350,
-					"PROGRAM_NM": "염혜란",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T10",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "동백꽃 필 무렵",
-					"PRIZE_NM": "여자 조연상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/50.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 51,
-					"CANDIDATE_ID": 351,
-					"PROGRAM_NM": "김강훈",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T11",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "동백꽃 필 무렵",
-					"PRIZE_NM": "남자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/51.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 52,
-					"CANDIDATE_ID": 352,
-					"PROGRAM_NM": "안보현",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T11",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "이태원 클라쓰",
-					"PRIZE_NM": "남자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/52.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 53,
-					"CANDIDATE_ID": 353,
-					"PROGRAM_NM": "안효섭",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T11",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "낭만닥터 김사부2",
-					"PRIZE_NM": "남자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/53.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 54,
-					"CANDIDATE_ID": 354,
-					"PROGRAM_NM": "옹성우",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T11",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "열여덟의 순간",
-					"PRIZE_NM": "남자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/54.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 55,
-					"CANDIDATE_ID": 355,
-					"PROGRAM_NM": "이재욱",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T11",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "어쩌다 발견한 하루",
-					"PRIZE_NM": "남자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/55.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 56,
-					"CANDIDATE_ID": 356,
-					"PROGRAM_NM": "김다미",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T12",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "이태원 클라쓰",
-					"PRIZE_NM": "여자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/56.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 57,
-					"CANDIDATE_ID": 357,
-					"PROGRAM_NM": "전미도",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T12",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "슬기로운 의사생활",
-					"PRIZE_NM": "여자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/57.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 58,
-					"CANDIDATE_ID": 358,
-					"PROGRAM_NM": "전여빈",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T12",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "멜로가 체질",
-					"PRIZE_NM": "여자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/58.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 59,
-					"CANDIDATE_ID": 359,
-					"PROGRAM_NM": "정지소",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T12",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "방법",
-					"PRIZE_NM": "여자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/59.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 60,
-					"CANDIDATE_ID": 360,
-					"PROGRAM_NM": "한소희",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T12",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "부부의 세계",
-					"PRIZE_NM": "여자 신인 연기상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/60.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 61,
-					"CANDIDATE_ID": 361,
-					"PROGRAM_NM": "김성주",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T13",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "내일은 미스터트롯",
-					"PRIZE_NM": "남자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/61.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 62,
-					"CANDIDATE_ID": 362,
-					"PROGRAM_NM": "김희철",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T13",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "아는 형님",
-					"PRIZE_NM": "남자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/62.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 63,
-					"CANDIDATE_ID": 363,
-					"PROGRAM_NM": "문세윤",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T13",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "1박 2일 시즌4",
-					"PRIZE_NM": "남자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/63.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 64,
-					"CANDIDATE_ID": 364,
-					"PROGRAM_NM": "유재석",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T13",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "놀면 뭐하니?",
-					"PRIZE_NM": "남자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/64.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 65,
-					"CANDIDATE_ID": 365,
-					"PROGRAM_NM": "장성규",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T13",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "방구석 1열",
-					"PRIZE_NM": "남자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/65.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 66,
-					"CANDIDATE_ID": 366,
-					"PROGRAM_NM": "김민경",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T14",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "맛있는 녀석들",
-					"PRIZE_NM": "여자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/66.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 67,
-					"CANDIDATE_ID": 367,
-					"PROGRAM_NM": "박나래",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T14",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "나 혼자 산다",
-					"PRIZE_NM": "여자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/67.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 68,
-					"CANDIDATE_ID": 368,
-					"PROGRAM_NM": "안영미",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T14",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "라디오스타",
-					"PRIZE_NM": "여자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/68.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 69,
-					"CANDIDATE_ID": 369,
-					"PROGRAM_NM": "장도연",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T14",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "밥블레스유",
-					"PRIZE_NM": "여자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/69.jpg",
-					"PHOTO_URI2": "NULL"
-				},
-				{
-					"ORD": 70,
-					"CANDIDATE_ID": 370,
-					"PROGRAM_NM": "홍현희",
-					"AWARD_NUM": 56,
-					"PRIZE_CD": "T14",
-					"REG_ID": "go.donghyeon",
-					"DIVISION": "tv",
-					"NAME": "아내의 맛",
-					"PRIZE_NM": "여자 TV예능상",
-					"PHOTO_URI": "http://images.jtbc.joins.com/baeksang/2020/nominee/tv/70.jpg",
-					"PHOTO_URI2": "NULL"
-				}
-			]
+			tabList: [
+				{ title: 'TV부문', division: 'tv', initCode: 'T01', prizes: [], candidates: [] },
+				{ title: '영화부문', division: 'movie', initCode: 'M01', prizes: [], candidates: [] },
+				{ title: '연극부문', division: 'play', initCode: 'P01', prizes: [], candidates: [] }
+			],
+			currentDivision: '',
+			currentPrize: ''
 		}),
-		computed: {
-			
+		watch: {
+			// 탭이 바뀔 때마다 1번탭 카테고리를 강제로 부여하려면, currentDivision이 바뀔 때마다 currentPrize를 initCode로 설정하면 효율적
+			// currentPrize가 변경되는 경우는 딱 2가지 이기 때문 (1. 탭이 바뀔 때, 카테고리를 눌렀을 때)
+			currentDivision: {
+				handler(newVal, oldVal) {
+					if (newVal && !this.$route.params.prize_id) {
+						this.setPrize(this.currentTab.initCode)
+					}
+				},
+				immediate: true
+			}
 		},
-		mounted(){
+		computed: {
+			// currentTab에 현재 division 오브젝트를 저장해 두면 하위 컴포넌트에서 title, candidates를 활용할 수 있음
+			// 만약 currentTab이 없이 currentDivision만 가지고 하위 컴포넌트에서 title을 보여주려면 마크업 구조를 변경하거나 하드 코딩해야 함
+			currentTab() {
+				return this.tabList.find((item) => {
+					return item.division === this.currentDivision
+				})
+			}
+		},
+		created() {
+			// 최초 페이지 호출 시, 1번탭, 1번탭 카테고리, 1번탭 후보 리스트를 가져오도록 초기 설정을 해야 함
+			// 그런데 currentDivision이 공백일 때, mounted()에서 초기 설정을 처리하면 computed()에서 최초 1회 currentDivision을 불러오지 못하게 됨 (정확히는 currentDivision = '' 공백으로 처리하면서 에러 발생)
+			// mounted() 대신 created()에서 초기 설정을 처리하면 이같은 에러가 발생하지 않으므로 데이터를 fetch하거나 초기값을 설정하는 작업은 created()를 이용할 것
+
+			// 초기값 설정
+			// 만약, router에서 division이나 initCode를 부여 받는다면 초기값이 달라짐
+			// ex) candidates/movie --> this.setDivision('movie') / this.setPrize('M01')
 			
+			let division = (this.$route.params.division) ? (this.$route.params.division) : this.tabList[0].division
+			this.setDivision(division)
+
+			let prize = (this.$route.params.prize_id) ? (this.$route.params.prize_id) : this.currentTab.initCode
+			this.setPrize(prize)
+
+			this.fetchPrizes()
+			this.fetchCandidates()
+		},
+		mounted() {
 		},
 		methods: {
-			
+			// 아래의 setDivision, setPrize 메서드는 추후 Vuex의 mutations에서 사용
+			setDivision(division) {
+				this.currentDivision = division
+			},
+			setPrize(cd) {
+				this.currentPrize = cd.toUpperCase()
+			},
+			// 아래의 fetchPrizes, fetchCandidates 메서드는 추후 Vuex의 actions에서 사용
+			fetchPrizes() {
+				this.tabList.map((item, idx) => {
+					this.axios.get(`/api/prizes?DIVISION=${item.division}`)
+					.then((res) => {
+						if (res.data.length) {
+							item.prizes = res.data
+						}
+					}).catch((err) => {
+						console.log(err)
+					})
+				})
+			},
+			fetchCandidates() {
+				this.tabList.map((item, idx) => {
+					this.axios.get(`/api/candidates?DIVISION=${item.division}`)
+					.then((res) => {
+						if (res.data.length) {
+							item.candidates = res.data
+						}
+					}).catch((err) => {
+						console.log(err)
+					})
+				})
+			},
+
+			// 상 목록은 고정되어 있는데 캡 메뉴를 누를 때마다 axios 요청을 보내므로,
+			// 최초 1회만 상 목록 data를 fetch하도록 axios 요청을 최소화
+			// getCatagory(division) {
+			// 	this.axios.get(`/api/prizes?DIVISION=${division}`)
+			// 	.then((res) => {
+			// 		if (res.data.length) {
+			// 			this.categoryList = res.data
+			// 		}
+			// 	}).catch((err) => {
+			// 		console.log(err)
+			// 	})
+			// },
+
+			// 후보 목록도 카테고리를 누를 때마다 axios 요청을 보내므로 이미지 렌더링에 시간이 조금 더 걸림
+			// 상 목록과 마찬가지로 최초 1회만 푸보 목록 data를 fetch 한 후, CandidateList.vue에서 fetch한 data를 filter 메서드로 정렬처리 하면 성능이 개선됨
+			// getCandidate(cd) {
+			// 	this.axios.get(`/api/candidates?DIVISION=${this.currentDivision}&PRIZE_CD=${cd}`)
+			// 	.then((res) => {
+			// 		if (res.data.length) {
+			// 			this.candidateList = res.data
+			// 		}
+			// 	}).catch((err) => {
+			// 		console.log(err)
+			// 	})
+			// }
 		}
 	}
 
