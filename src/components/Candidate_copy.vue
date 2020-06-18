@@ -15,8 +15,6 @@
 </template>
 
 <script>
-	const API_URI = (window.location.protocol === 'https:') ? process.env.VUE_APP_HTTPS_API_URI : process.env.VUE_APP_API_URI
-
 	// import { mapState, mapActions, mapGetters } from 'vuex'
 	import { Fragment } from 'vue-fragment'
 	import CandidateTab from '@/components/CandidateTab.vue'
@@ -88,7 +86,7 @@
 			// 아래의 fetchPrizes, fetchCandidates 메서드는 추후 Vuex의 actions에서 사용
 			fetchPrizes() {
 				this.tabList.map((item, idx) => {
-					this.axios.get(`${API_URI}/prizes/${item.division}`)
+					this.axios.get(`/api/prizes?DIVISION=${item.division}`)
 					.then((res) => {
 						if (res.data.length) {
 							item.prizes = res.data
@@ -100,7 +98,7 @@
 			},
 			fetchCandidates() {
 				this.tabList.map((item, idx) => {
-					this.axios.get(`${API_URI}/candidates/${item.division}`)
+					this.axios.get(`/api/candidates?DIVISION=${item.division}`)
 					.then((res) => {
 						if (res.data.length) {
 							item.candidates = res.data
