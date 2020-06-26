@@ -5,6 +5,18 @@
 
 <script>
 export default {
-	name: 'notice'
+	name: 'notice',
+	props: {
+	},
+	data: () => ({
+	}),
+	computed: {
+
+	},
+	mounted() {
+	},
+	methods: {
+
+	}
 }
 </script>

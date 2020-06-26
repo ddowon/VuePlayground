@@ -4,20 +4,11 @@ import Home from '@/views/Home.vue'
 import About from '@/views/About.vue'
 import Candidate from '@/views/Candidate.vue'
 import Replay from '@/views/Replay.vue'
-import Winners from '@/views/Winners.vue'
+import Winner from '@/views/Winner.vue'
 import Vote from '@/views/Vote.vue'
 import Notice from '@/views/Notice.vue'
 
 Vue.use(VueRouter)
-
-// export default new VueRouter({	
-// 	routes: [
-// 		{ path: '/', name: 'Home', meta: { title: '메인' }, component: Home },
-// 		{ path: '/candidate', meta: { title: '56회 후보자/작품' }, component: Candidate }
-// 	]
-// })
-
-
 
 const routes = [
 	{
@@ -36,31 +27,49 @@ const routes = [
 		path: '/candidate',
 		name: 'candidate',
 		meta: { title: '56회 후보자/작품' },
-		component: Candidate
+		// /candidate로 접근하면 candidate/tv로 redirect 처리
+		redirect: { name: 'candidate_division', params: { division: 'tv' } }
 	},
 	{
 		path: '/candidate/:division',
-		name: 'candidate',
+		name: 'candidate_division',
 		meta: { title: '56회 후보자/작품' },
+		props: true,
 		component: Candidate
 	},
 	{
 		path: '/candidate/:division/:prize_id',
-		name: 'candidate',
-		meta: { title: '56회 후보자/작품'},
+		name: 'candidate_division_prize_id',
+		meta: { title: '56회 후보자/작품' },
+		props: true,
 		component: Candidate
 	},
 	{
 		path: '/replay',
 		name: 'replay',
 		meta: { title: '다시보기' },
-		component: Replay
+		// replay로 접근하면 replay/56로 redirect 처리
+		redirect: { name: 'replay_times', params: { replay_times: '56' } }
 	},
 	{
-		path: '/winners',
-		name: 'winners',
+		path: '/replay/:replay_times',
+		name: 'replay_times',
+		meta: { title: '다시보기' },
+		component: Replay,
+	},
+	{
+		path: '/winner',
+		name: 'winner',
 		meta: { title: '역대 수상' },
-		component: Winners
+		// /winner로 접근하면 winner/55로 redirect 처리
+		redirect: { name: 'winner_times', params: { times: '55' } }
+	},
+	{
+		path: '/winner/:times',
+		name: 'winner_times',
+		meta: { title: '역대 수상' },
+		props: true,
+		component: Winner
 	},
 	{
 		path: '/vote',
