@@ -25,7 +25,7 @@
 .sub-page .sector-title .nominee-award:after {position:absolute; right:0; top:7px; display:block; content:""; width:1px; height:14px; background:#949494;}
 .sub-page .sector-title .nominee-sector {display:inline-block; padding:0 8px; height:24px; font-size:14px; line-height:24px; color:#fff; vertical-align:middle;}
 .sub-page .top-wrap {position:fixed; right:60px; bottom:60px; display:inline-block; z-index:1;}
-.dim-wrap { position:fixed;left:0; top:0; right:0; bottom:0; width:100%; height:100%; background:rgba(0, 0, 0, .9); z-index:10;
+.dim-wrap { position:fixed;left:0; top:0; right:0; bottom:0; width:100%; height:100%; background:rgba(0, 0, 0, .7); z-index:10;
 	transition:all .3s;
 }
 
@@ -56,6 +56,7 @@ a.btn_file_save.big:focus,a.btn_file_save.big:hover{background:#f5f5f5}
 .tb_view .view_cont_txt p strong{font-weight:700}
 .tb_view .view_cont_txt p em{font-style:italic}
 .tb_view .share_btn_group{right:0}
+
 /*! BOARD - view (next/prev) :from.jtbc.joins.com */
 .tbl_other{margin:60px 0 0;border-top:1px solid #eaeaea}
 .tbl_other li{padding:19px 0 20px;border-bottom:1px solid #eaeaea}
@@ -64,8 +65,8 @@ a.btn_file_save.big:focus,a.btn_file_save.big:hover{background:#f5f5f5}
 .tbl_other a:focus,
 .tbl_other a:hover{color:#00306e; text-decoration:underline}
 .tbl_other li strong .ico{display:inline-block;width:12px;height:7px;margin-left:26px;vertical-align:middle;}
-.tbl_other li.pre strong .ico{background:url('http://images.jtbc.joins.com/baeksang/list_prev.png') no-repeat;}
-.tbl_other li.nex strong .ico {margin-left:30px; background:url('http://images.jtbc.joins.com/baeksang/list_next.png') no-repeat;}
+.tbl_other li.prev strong .ico{background:url('http://images.jtbc.joins.com/baeksang/list_prev.png') no-repeat;}
+.tbl_other li.next strong .ico {margin-left:30px; background:url('http://images.jtbc.joins.com/baeksang/list_next.png') no-repeat;}
 .tb_view .filesave_wrap{position:relative; margin:0 0 40px 20px;}
 .tb_view .filesave_wrap .filesave_list.on{display:block}
 .tb_view .filesave_wrap .filesave_list{position:absolute;z-index:1;top:0;left:150px;display:none;min-width:200px;padding:15px 34px 15px 20px;border:1px solid #ccc;background:#fff;box-shadow:3px 3px 3px #ececec}
@@ -348,15 +349,22 @@ a.btn_file_save.big:focus,a.btn_file_save.big:hover{background:#f5f5f5}
 .notice-page tbody th{font-size:18px;}
 .notice-page 
 .paging{padding:60px 0 0; font-size:0; text-align:center}
-.paging a {display:inline-block; margin-left:-1px; min-width:44px; height:44px;  font-size:16px; line-height:44px; color:#454545; border:1px solid #aaa;}
-.paging .curpage.active, 
-.paging .curpage:hover{color:#fff; background:#00306e; border:1px solid #00306e;}
+.paging li {display:inline-block;}
+.paging li a {display:block; margin-left:-1px; min-width:44px; height:44px;  font-size:16px; line-height:44px; color:#454545; border:1px solid #aaa;}
+.paging li a:focus,
+.paging li a:active {outline: none;}
+.paging .curpage.active a, 
+.paging .curpage:hover a{color:#fff; background:#005124; border:1px solid #005124;}
 .paging .btn-paging-next {}
 .btn-paging-prev,
-.btn-prev:hover {width:44px; height:44px; background:#fff url('http://images.jtbc.joins.com/baeksang/paging_left.png') center no-repeat;}
-.btn-paging-next {width:44px; height:44px; background:url('http://images.jtbc.joins.com/baeksang/paging_right.png') center no-repeat;}
+.btn-prev:hover {width:44px; height:44px; background:#fff url('http://images.jtbc.joins.com/baeksang/paging_left.png') center no-repeat;text-indent:-9999px;}
+.btn-paging-next {width:44px; height:44px; background:url('http://images.jtbc.joins.com/baeksang/paging_right.png') center no-repeat; text-indent:-9999px;}
 .btn-prev,
 .btn-next {font-size:0; line-height:0; text-indent:-9999px;}
 .notice-page .banner {margin-top:62px;}
+
+
+.btn_board_delete {}
+.btn_board_remove {}
 
 /* //css */
