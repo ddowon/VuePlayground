@@ -5,19 +5,16 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-import VueYoutube from 'vue-youtube'
-import vueMoment from 'vue-moment'
+
+import '@/plugins/vue-axios'
+import '@/plugins/vue-moment'
+import '@/plugins/vue-toastification'
+import '@/plugins/vue-youtube'
 
 import '@/styles/ui.css'
 import '@/styles/ui2020.css'
 
 Vue.config.productionTip = false
-
-Vue.use(VueAxios, axios)
-Vue.use(VueYoutube)
-Vue.use(vueMoment)
 
 new Vue({
 	router,

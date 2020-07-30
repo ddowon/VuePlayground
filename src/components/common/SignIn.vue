@@ -1,9 +1,9 @@
 <template>
-	<div class="dim-wrap" v-show="openSignIn" @click.self="closeSignIn">
+	<div class="dim-wrap" v-show="openSignIn" @click.self="setSignIn(false)">
 		<div class="dim-con sign-form-wrap">
 			<form class="sign-form">
 				<h3 class="form-title"><span>로그인</span>
-				<button type="button" @click.prevent="closeSignIn">×</button></h3>
+				<button type="button" @click.prevent="setSignIn(false)">×</button></h3>
 				<div class="form-group">
 					<div class="callout -info">
 						<h4>지금 가입하시면 혜택을 드려요!</h4>
@@ -39,37 +39,36 @@
 </template>
 
 <script>
-	const API_URI = (window.location.protocol === 'https:') ? process.env.VUE_APP_HTTPS_API_URI : process.env.VUE_APP_API_URI
-	import { mapGetters, mapActions, mapState } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
-	export default {
-		props: {
+export default {
+	props: {
+	},
+	data: () => ({
+		email: null,
+		password: null,
+		isLogged: false
+	}),
+	computed: {
+		...mapGetters(
+			'ui', [ 'openSignIn' ]
+		)
+	},
+	mounted() {
+	},
+	methods: {
+		...mapActions(
+			'ui', [ 'setSignIn', 'setSignUp' ]
+		),
+		openSignUpModal() {
+			this.setSignIn(false)
+			this.setSignUp()
 		},
-		data: () => ({
-			email: null,
-			password: null,
-			isLogged: false
-		}),
-		computed: {
-			...mapState(
-				'ui', [ 'openSignIn' ]
-			)
-		},
-		mounted() {
-		},
-		methods: {
-			...mapActions(
-				'ui', [ 'closeSignIn', 'openSignUp' ]
-			),
-			openSignUpModal() {
-				this.closeSignIn()
-				this.openSignUp()
-			},
-			signIn() {
-				this.$store.dispatch('user/signIn', { email: this.email, password: this.password })
-			}
+		signIn() {
+			this.$store.dispatch('auth/signIn', { email: this.email, password: this.password })
 		}
 	}
+}
 </script>
 <style>
 	/* 회원가입, 로그인 모달창 */

@@ -39,7 +39,9 @@
 					</div>
 					<div class="bw_footer">
 						<div class="button">
-							<a href="#" class="box-btn"><span>목록</span></a>
+							<router-link :to="{ name: 'notice' }" class="box-btn">
+								<span>목록</span>
+							</router-link>
 							<a href="#" class="box-btn primary" @click.prevent="addNotice"><span>글쓰기</span></a>
 						</div>
 					</div>
@@ -71,7 +73,7 @@ export default {
 	},
 	computed: {
 		...mapGetters(
-			'user', [ 'currentToken', 'currentUser', 'isLogged' ]
+			'auth', [ 'token', 'currentUser', 'isLogged' ]
 		)
 	},
 	created() {
@@ -100,7 +102,7 @@ export default {
 
 			const headers = {
 				'Content-Type': 'multipart/form-data',
-				'x-access-token': this.currentToken
+				'x-access-token': this.token
 			}
 
 			this.axios.post(`${API_URI}/notice/add`, formData, {

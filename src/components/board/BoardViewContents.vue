@@ -13,8 +13,8 @@
 			<div class="bv_footer">
 				<template>
 					<div class="button button_center">
-						<a href="#" class="box-btn btn-like" @click="like(item.id)"><span>추천<span>{{item.cnt.like}}</span></span></a>
-						<a href="#" class="box-btn btn-dislike" @click="dislike(item.id)"><span>비추천<span>{{Number(item.cnt.dislike)}}</span></span></a>
+						<a href="#" class="box-btn btn-like" @click.prevent="like(item.id)"><span>추천<span>{{item.cnt.like}}</span></span></a>
+						<a href="#" class="box-btn btn-dislike" @click.prevent="dislike(item.id)"><span>비추천<span>{{Number(item.cnt.dislike)}}</span></span></a>
 					</div>
 				</template>
 				<template>
@@ -31,6 +31,7 @@
 <script>
 const API_URI = (window.location.protocol === 'https:') ? process.env.VUE_APP_HTTPS_API_URI : process.env.VUE_APP_API_URI
 import { mapGetters } from 'vuex'
+
 export default {
 	props: [ 'item' ],
 	components: {
@@ -38,7 +39,7 @@ export default {
 	data: () => ({
 	}),
 	computed: {
-		...mapGetters('user', [ 'isLogged', 'currentToken' ])
+		...mapGetters('auth', [ 'isLogged', 'token' ])
 	},
 	watch: {
 	},
@@ -56,7 +57,7 @@ export default {
 			}
 			console.table(this.item)
 			if (this.isLogged) {
-				headers['x-access-token'] = this.currentToken
+				headers['x-access-token'] = this.token
 			}
 			this.axios.put(`${API_URI}/notice/like/${id}`, null, {
 				headers: headers
@@ -74,7 +75,7 @@ export default {
 			}
 
 			if (this.isLogged) {
-				headers['x-access-token'] = this.currentToken
+				headers['x-access-token'] = this.token
 			}
 			this.axios.put(`${API_URI}/notice/dislike/${id}`, null, {
 				headers: headers

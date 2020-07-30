@@ -26,7 +26,7 @@
 				<div class="comment_header">
 					<div class="info">
 						<span class="nickname">{{ comment.display_name }}</span>
-						<span class="date">{{ comment.created_at }}</span>
+						<span class="date">{{ formatDate(comment.created_at, 'YY-MM-DD HH:mm') }}</span>
 					</div>
 					<div class="btns">
 						<!--
@@ -59,7 +59,6 @@
 
 <script>
 const API_URI = (window.location.protocol === 'https:') ? process.env.VUE_APP_HTTPS_API_URI : process.env.VUE_APP_API_URI
-
 import { mapGetters } from 'vuex'
 
 export default {
@@ -80,7 +79,7 @@ export default {
 
 		// 비회원으로 댓글 작성 -> 작성된 댓글의 출력 -> 회원으로 댓글 작성 고고고고고고
 
-		...mapGetters('user', [ 'isLogged', 'currentUser', 'currentToken' ])
+		...mapGetters('auth', [ 'isLogged', 'currentUser', 'token' ])
 	},
 	watch: {
 	},
@@ -92,7 +91,7 @@ export default {
 		},
 		addComments() {
 			// isLogged는 vuex에서 가져옵니다!
-			// currentToken도 vuex에서 가져옵니다!
+			// token도 vuex에서 가져옵니다!
 			// const는 수정을 할 수 없으니 let을 씁니다.
 			let formData = {
 				contents: this.contents
@@ -117,7 +116,7 @@ export default {
 
 			if (this.isLogged) {
 				// 키값에 -가 들어가니 아래처럼 변경했어요.
-				headers['x-access-token'] = this.currentToken
+				headers['x-access-token'] = this.token
 			} else {
 				formData.name = this.name
 				formData.password = this.password
@@ -156,7 +155,7 @@ export default {
 			}
 			
 			if (this.isLogged) {
-				headers['x-access-token'] = this.currentToken
+				headers['x-access-token'] = this.token
 			}
 
 			this.axios.delete(`${API_URI}/notice/${this.pr_id}/comment/delete/${id}`, formData, { 
@@ -173,7 +172,7 @@ export default {
 			}
 
 			if (this.isLogged) {
-				headers['x-access-token'] = this.currentToken
+				headers['x-access-token'] = this.token
 			}
 			this.axios.put(`${API_URI}/notice/${this.pr_id}/comment/like/${id}`, null, {
 				headers: headers
@@ -190,7 +189,7 @@ export default {
 			}
 
 			if (this.isLogged) {
-				headers['x-access-token'] = this.currentToken
+				headers['x-access-token'] = this.token
 			}
 			this.axios.put(`${API_URI}/notice/${this.pr_id}/comment/dislike/${id}`, null, {
 				headers: headers
@@ -200,6 +199,16 @@ export default {
 			}).catch((err) => {
 				alert(err.response.data.message)
 			})
+		},
+		formatDate(time, displayFormat = 'YYYY-MM-DD') {
+			// BoardList.vue에도 formatDate 메서드를 중복 사용하는데, 어떻게 하면 코드를 한 번만 호출할 수 있을까요?
+			let created_at = this.$moment(time)
+			let compareDate = this.$moment().subtract(1, 'days')
+
+			if (created_at.isSameOrAfter(compareDate, 'day')) {
+				return created_at.fromNow()
+			}
+			return created_at.format(displayFormat)
 		}
 	}
 }
