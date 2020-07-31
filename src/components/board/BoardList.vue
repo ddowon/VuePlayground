@@ -1,5 +1,5 @@
 <template>
-	<table v-if="info">
+	<table v-if="itemsList">
 		<caption>{{ info.title }} 게시판 : 번호, 제목, 작성일</caption>
 		<colgroup>
 			<col style="width:18%;">
@@ -14,7 +14,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="item in info.list" :key="item.id">
+			<tr v-for="item in itemsList" :key="item.id">
 				<td>{{ item.id }}</td>
 				<td class="title">
 					<router-link :to="{ name: `${info.routeName}_view`, params: { 'id': item.id } }">
@@ -29,7 +29,7 @@
 
 <script>
 export default {
-	props: [ 'info' ],
+	props: [ 'info', 'itemsList' ],
 	methods: {
 		formatDate(time, displayFormat = 'YYYY-MM-DD') {
 			// 리팩토링한 코드에서는 moment.js 플러그인을 활용

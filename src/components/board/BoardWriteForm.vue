@@ -42,7 +42,12 @@
 							<router-link :to="{ name: 'notice' }" class="box-btn">
 								<span>목록</span>
 							</router-link>
-							<a href="#" class="box-btn primary" @click.prevent="addNotice"><span>글쓰기</span></a>
+							<template v-if="!item">
+								<a href="#" class="box-btn primary" @click.prevent="addNotice"><span>글쓰기</span></a>
+							</template>
+							<template v-else>
+								<a href="#" class="box-btn primary" @click.prevent="updateNotice(item.id)"><span>글수정</span></a>
+							</template>
 						</div>
 					</div>
 					<!-- //.bw_footer -->
@@ -82,36 +87,33 @@ export default {
 	methods: {
 		fetchItem() {
 			if (this.item) {
-				this.name = this.item.name
+				this.name = this.item.author.name
+				this.title = this.item.title
+				this.contents = this.item.contents
 			}
 		},
 		handleImages() {
-			console.log('파일첨부에서 뭔가 바꼈구나...?!')
 			this.images = this.$refs.boardImage.files[0]
 		},
 		// 글쓰기를 구현해 보세요옹 (얄미운 옹)
 		addNotice() {
-			if (!this.isLogged) {
-				return alert('로그인 해 주세요!')
-			}
 			// 이렇게 데이터를 묶어서!
 			const formData = new FormData()
 			formData.append('title', this.title)
 			formData.append('contents', this.contents)
 			formData.append('images', this.images)
 
-			const headers = {
-				'Content-Type': 'multipart/form-data',
-				'x-access-token': this.token
-			}
+			this.$store.dispatch('notices/addItem', formData)
+		},
+		updateNotice(id){
+			const formData = new FormData()
+			formData.append('title', this.title)
+			formData.append('contents', this.contents)
+			formData.append('images', this.images)
 
-			this.axios.post(`${API_URI}/notice/add`, formData, {
-				headers: headers
-			}).then((res) => {
-				this.$router.push({ name: 'notice_view', params: { id: res.data.id } })
-				console.log(res.data)
-			}).catch((err) => {
-				alert(err.response.data.message)
+			this.$store.dispatch('notices/updateItem', {
+				id: id,
+				formData: formData
 			})
 		}
 	}

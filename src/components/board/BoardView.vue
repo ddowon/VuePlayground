@@ -2,7 +2,7 @@
 	<div class="tb_view">
 		<template v-if="item">
 			<BoardViewHeader :item="item" />
-			<BoardViewContents :item="item" />
+			<BoardViewContents :item="item" :id="id"/>
 <!-- 
 			근데 왜 다른 건 다 id인데 여기만 item.id냐는 게 궁금한 거죠? ㅋㅋㅋㅋㅋㅋㅋㅋ
 			그건 얘가 1차 router-view 컴포넌트가 아니라서.. 그럼당...
@@ -31,7 +31,7 @@
 
 
 			<BoardViewFooter />
-			<BoardViewComments :pr_id="item.id" :comments="item.comments" :key="refreshKey" @forceKeyUpdate="changeRefreshKey" />
+			<BoardViewComments :pr_id="item.id" :comments="item.comments" @forceKeyUpdate="changeRefreshKey" />
 		</template>
 	</div>
 </template>
@@ -49,10 +49,8 @@ export default {
 	components: {
 		BoardViewHeader, BoardViewContents, BoardViewFooter, BoardViewComments
 	},
-	props: [ 'id', 'boardId' ],
+	props: [ 'id' ],
 	data: () => ({
-		refreshKey: 0,
-		item: null
 	}),
 	watch: {
 		'id': {
@@ -66,61 +64,29 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(
-			'auth', [ 'token', 'currentUser', 'isLogged' ]
-		)
+		...mapGetters('auth', [ 'token', 'currentUser', 'isLogged' ]),
+		...mapGetters('notices', [ 'item' ])
 	},
 	created() {
-		this.changeRefreshKey()
 		this.fetchItemById(this.id)
 	},
 	methods: {
 		changeRefreshKey() {
-			this.refreshKey += 1
-
-			// key값이 변화하면 다시 패치
 			this.fetchItemById(this.id)
 		},
 		fetchItemById(id = 1) {
-			// 도원님 공간
-			this.axios.get(`${API_URI}/${this.boardId}/${id}`)
-			.then((res) => {
-				// console.log(res.data)
-				if (res.data) {
+			// 블로그 글이랑은 좀 다른데요..
+			// 라우트에서 동일 url로 이동하는 건 history API pushstate 정책 위반이래요.. ㅠㅠ
+			// 그래서 push 에러를 없애봤는데 재이동은 안되는 걸로 판명나서
+			// 블로그 글을 보니 key를 강제업데이트 하라고 하는데, 우리는 BoardViewComments.vue 안의 input 박스를 통으로 리렌더링 해야 하잖아요, 댓글 목록이랑?
+			// 그래서 그걸 통합해서 새로고침 해야하니까 상위 컴포넌트로 업데이트 이벤트를 $emit으로 발생시켜서
+			// 컴포넌트를 뿅하고 새로 만드는 겁니다.
+			// 그러면 댓글이 작성되고 나면 mounted 또는 watch 이벤트를 타게 되거든요. 다시금?
+			// created도 타는지 확인해 봅시다.
 
-					console.log(res.data.itemsList[0])
-					this.item = res.data.itemsList[0]
-				}
-			}).catch((err) => {
-				// console.log(err)
-			})
+			this.$store.dispatch('notices/fetchItemById', id)
 		},
-		removeItem(id) {
-
-			if (!this.isLogged) {
-				return alert('로그인 해 주세요!')
-			}
-
-			let headers = {
-				'x-access-token': 'guest'
-			}
-			
-			if (this.isLogged) {
-				headers['x-access-token'] = this.token
-			}
-
-			this.axios.delete(`${API_URI}/notice/delete/${id}`, {
-				headers: headers
-			})
-			.then((res) => {
-				console.log(res.data)
-				alert('삭제되었습니다.')
-				this.$router.push({ name: 'notice_list', params: { page: '1' }})
-			}).catch((err) => {
-				console.log(err)
-			})
-
-		},
+		
 		updateItem(id) {
 			if (!this.isLogged) {
 				return alert('로그인 해 주세요!')

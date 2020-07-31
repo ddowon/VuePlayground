@@ -59,7 +59,7 @@
 
 <script>
 const API_URI = (window.location.protocol === 'https:') ? process.env.VUE_APP_HTTPS_API_URI : process.env.VUE_APP_API_URI
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
 	props: [ 'pr_id', 'comments' ],
@@ -79,9 +79,17 @@ export default {
 
 		// 비회원으로 댓글 작성 -> 작성된 댓글의 출력 -> 회원으로 댓글 작성 고고고고고고
 
-		...mapGetters('auth', [ 'isLogged', 'currentUser', 'token' ])
+		...mapGetters('auth', [ 'isLogged', 'currentUser', 'token' ]),
+		...mapGetters('notices', [ 'refreshKey' ])
 	},
 	watch: {
+		'refreshKey' : {
+			handler(newVal, oldVal){
+				if (newVal !== oldVal){
+					this.$emit('forceKeyUpdate')
+				}
+			}
+		}
 	},
 	created() {
 	},
@@ -96,9 +104,7 @@ export default {
 			let formData = {
 				contents: this.contents
 			}
-			let headers = {
-				'x-access-token': 'guest'
-			}
+
 			if (!this.isLogged) {
 				if (!this.name){
 					alert('이름을 입력해주세요.')
@@ -114,90 +120,37 @@ export default {
 				}
 			}
 
-			if (this.isLogged) {
-				// 키값에 -가 들어가니 아래처럼 변경했어요.
-				headers['x-access-token'] = this.token
-			} else {
+			if (!this.isLogged) {
 				formData.name = this.name
 				formData.password = this.password
 			}
 
-			console.log(this.pr_id)
-			this.axios.post(`${API_URI}/notice/${this.pr_id}/comment/add`, formData, { 
-				headers: headers })
-			.then((res) => {
-				// console.log(res.data)
-				this.$emit('forceKeyUpdate')
-
-				// 블로그 글이랑은 좀 다른데요..
-				// 라우트에서 동일 url로 이동하는 건 history API pushstate 정책 위반이래요.. ㅠㅠ
-				// 그래서 push 에러를 없애봤는데 재이동은 안되는 걸로 판명나서
-				// 블로그 글을 보니 key를 강제업데이트 하라고 하는데, 우리는 BoardViewComments.vue 안의 input 박스를 통으로 리렌더링 해야 하잖아요, 댓글 목록이랑?
-				// 그래서 그걸 통합해서 새로고침 해야하니까 상위 컴포넌트로 업데이트 이벤트를 $emit으로 발생시켜서
-				// 컴포넌트를 뿅하고 새로 만드는 겁니다.
-				// 그러면 댓글이 작성되고 나면 mounted 또는 watch 이벤트를 타게 되거든요. 다시금?
-				// created도 타는지 확인해 봅시다.
-
-				// console.log(formData)
-
-				// this.$router.push({ name: 'notice_view', params: { 'id': this.pr_id } }).catch(() => {})
-			}).catch((err) => {
-				console.log(err)
+			this.$store.dispatch('notices/addComment', {
+				pr_id: this.pr_id,
+				formData: formData
 			})
-
+			
 		},
 		removeComments(id) {
 			let formData = {
 				password : this.deletePassword
 			}
-			let headers = {
-				'x-access-token': 'guest'
-			}
-			
-			if (this.isLogged) {
-				headers['x-access-token'] = this.token
-			}
-
-			this.axios.delete(`${API_URI}/notice/${this.pr_id}/comment/delete/${id}`, formData, { 
-				headers: headers })
-			.then((res) => {
-				console.log(res.data)
-			}).catch((err) => {
-				console.error(err.response.data.message)
+			this.$store.dispatch('notices/removeComment', {
+				pr_id: this.pr_id,
+				id: id,
+				formData: formData
 			})			
 		},
 		like(id) {
-			let headers = {
-				'x-access-token': 'guest'
-			}
-
-			if (this.isLogged) {
-				headers['x-access-token'] = this.token
-			}
-			this.axios.put(`${API_URI}/notice/${this.pr_id}/comment/like/${id}`, null, {
-				headers: headers
-			})
-			.then((res) => {
-				this.$emit('forceKeyUpdate')
-			}).catch((err) => {
-				alert(err.response.data.message)
+			this.$store.dispatch('notices/likeComment', {
+				pr_id: this.pr_id,
+				id: id
 			})
 		},
 		dislike(id) {
-			let headers = {
-				'x-access-token': 'guest'
-			}
-
-			if (this.isLogged) {
-				headers['x-access-token'] = this.token
-			}
-			this.axios.put(`${API_URI}/notice/${this.pr_id}/comment/dislike/${id}`, null, {
-				headers: headers
-			})
-			.then((res) => {
-				this.$emit('forceKeyUpdate')
-			}).catch((err) => {
-				alert(err.response.data.message)
+			this.$store.dispatch('notices/dislikeComment', {
+				pr_id: this.pr_id,
+				id: id
 			})
 		},
 		formatDate(time, displayFormat = 'YYYY-MM-DD') {
