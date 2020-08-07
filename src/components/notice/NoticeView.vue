@@ -1,7 +1,7 @@
 <template>
 	<div class="tlb-wrap">
 		<div class="container-inner">
-			<BoardView :id="id" board-id="notice" />
+			<BoardView :id="id" :routeName="routeName" />
 		</div>
 	</div>
 </template>
@@ -15,6 +15,7 @@ export default {
 	},
 	props: [ 'id' ],
 	data: () => ({
+		routeName: 'notice' 
 	}),
 	created() {
 	},

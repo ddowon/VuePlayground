@@ -203,6 +203,8 @@ body {min-height: 100%;}
 .comment_wrap .comment_list .btn.btn-upvote:before {top:8px;width:17px;height:16px;background-position:-125px -267px}
 .comment_wrap .comment_list .btn.btn-downvote:before {top:9px;width:17px;height:16px;background-position:-143px -267px}
 .comment_wrap .comment_list li {padding:20px 22px;border-bottom:1px solid #ddd}
+.comment_wrap .comment_list li.mine {background:#eee}
+.comment_wrap .comment_list li.no_list {padding:50px 0px;text-align:center;}
 .comment_wrap .comment_list .comment_header {overflow:hidden;letter-spacing:-0.5px;margin-bottom:4px}
 .comment_wrap .comment_list .comment_header .info {float:left;line-height:30px}
 .comment_wrap .comment_list .comment_header .info .nickname {font-size:15px;margin-right:4px;font-weight:bold;color:#005124}

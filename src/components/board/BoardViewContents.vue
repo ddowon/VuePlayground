@@ -13,13 +13,13 @@
 			<div class="bv_footer">
 				<template>
 					<div class="button button_center">
-						<a href="#" class="box-btn btn-like" @click.prevent="like(item.id)"><span>추천<span>{{cntLike}}</span></span></a>
-						<a href="#" class="box-btn btn-dislike" @click.prevent="dislike(item.id)"><span>비추천<span>{{cntDislike}}</span></span></a>
+						<a href="#" class="box-btn btn-like" @click.prevent="likeItem(item.id)"><span>추천<span>{{cntLike}}</span></span></a>
+						<a href="#" class="box-btn btn-dislike" @click.prevent="dislikeItem(item.id)"><span>비추천<span>{{cntDislike}}</span></span></a>
 					</div>
 				</template>
 				<template>
 					<div class="button button_right">
-						<router-link :to="{ name: 'notice_update', params: { id: id } }" class="box-btn"><span>글수정</span></router-link>
+						<router-link :to="{ name: 'notice_update', params: { id: id } }" class="box-btn"><span>수정</span></router-link>
 						<a class="box-btn" @click.prevent="removeItem(item.id)"><span>삭제</span></a>
 					</div>
 				</template>
@@ -66,11 +66,11 @@ export default {
 		removeItem(id) {
 			this.$store.dispatch('notices/removeItem', id)
 		},
-		like(id){
-			this.$store.dispatch('notices/like', id)
+		likeItem(id){
+			this.$store.dispatch('notices/likeItem', id)
 		},
-		dislike(id){
-			this.$store.dispatch('notices/dislike', id)
+		dislikeItem(id){
+			this.$store.dispatch('notices/dislikeItem', id)
 		}		
 	}
 }

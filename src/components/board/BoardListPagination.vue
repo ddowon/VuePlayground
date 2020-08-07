@@ -1,9 +1,9 @@
 <template>
 	<paginate
+		:force-page="currentPage"
 		:page-count="Number(totalPage)"
 		:page-range="Number(pageRange)"
 		:click-handler="clickCallback"
-		:force-page="Number(currentPage)"
 		:prev-text="'first page'"
 		:next-text="'last page'"
 		:container-class="'paging'"
@@ -21,7 +21,7 @@ export default {
 	components: {
 		Paginate
 	},
-	props: [ 'totalPage', 'pageRange', 'currentPage' ],
+	props: [ 'currentPage', 'totalPage', 'pageRange' ],
 	methods: {
 		clickCallback(pageNum) {
 			this.$emit('changePaging', pageNum)

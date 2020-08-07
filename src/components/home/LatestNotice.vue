@@ -12,33 +12,17 @@
 				</div><!-- .head -->
 
 				<!-- 도원님이 가장 최근 공지사항 게시글 2개 출력 구현할 부분 -->
-				<div class="list">
+
+				<div class="list" v-if="itemsList.length">
 					<ul>
-						<li>
-							<a href="/noticeView/7">
+
+						<li v-for="item in itemsList" :key="item.id">
+							<router-link :to="{ name: 'notice_view', params: { 'id': item.id } }">
 								<strong>
-									<i>제56회 백상예술대상 디지털 생중계 관련 안내 </i>
+									<i>{{ item.title }}</i>
 								</strong>
-								<span>
-									<i>
-										‘제56회 백상예술대상’ 디지털 생중계 관련 안내 드립니다.
-									</i>
-								</span>
-								<em>2020.06.05</em>
-							</a>
-						</li>
-						<li>
-							<a href="/noticeView/6">
-								<strong>
-									<i>제56회 백상예술대상 레드카펫 생중계 안내</i>
-								</strong>
-								<span>
-									<i>
-										제56회 백상예술대상 레드카펫 생중계 안내
-									</i>
-								</span>
-								<em>2020.06.05</em>
-							</a>
+								<em>{{ formatDate(item.created_at, 'YYYY-MM-DD') }}</em>
+							</router-link>
 						</li>
 					</ul>
 				</div><!-- .list -->
@@ -58,7 +42,34 @@
 </template>
 
 <script>
+
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
-	name: 'latestNotice'
+	name: 'latestNotice',
+	computed: {
+		...mapGetters('notices', ['itemsList'])
+	},
+	created(){
+		this.fetchListByPageSize()
+	},
+	methods: {
+		fetchListByPageSize(pageNum = 1, size = 2) {
+			this.$store.dispatch('notices/fetchListByPageSize', {
+				pageNum: pageNum,
+				size: size
+			})
+		},
+		formatDate(time, displayFormat = 'YYYY-MM-DD') {
+			// BoardList.vue에도 formatDate 메서드를 중복 사용하는데, 어떻게 하면 코드를 한 번만 호출할 수 있을까요?
+			let created_at = this.$moment(time)
+			let compareDate = this.$moment().subtract(1, 'days')
+
+			if (created_at.isSameOrAfter(compareDate, 'day')) {
+				return created_at.fromNow()
+			}
+			return created_at.format(displayFormat)
+		}
+	}
 }
 </script>

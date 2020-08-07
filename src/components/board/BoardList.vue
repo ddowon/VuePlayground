@@ -5,23 +5,30 @@
 			<col style="width:18%;">
 			<col style="">
 			<col style="width:18%;">
+			<col style="width:10%;">
+			<col style="width:10%;">
 		</colgroup>
 		<thead>
 			<tr>
 				<th scope="col">번호</th>
 				<th scope="col">제목</th>
 				<th scope="col">작성일</th>
+				<th scope="col">추천</th>
+				<th scope="col">비추천</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr v-for="item in itemsList" :key="item.id">
 				<td>{{ item.id }}</td>
 				<td class="title">
-					<router-link :to="{ name: `${info.routeName}_view`, params: { 'id': item.id } }">
+					<router-link :to="{ name: `${info.routeName}_view`, params: { 'id': item.id }, query: { 'page': $route.query.page } }">
 						{{ item.title }}
 					</router-link>
+					<span class="cnt_comment">{{ `[${item.cnt.comment}]` }}</span>
 				</td>
 				<td>{{ formatDate(item.created_at) }}</td>
+				<td>{{ item.cnt.like }}</td>
+				<td>{{ item.cnt.dislike }}</td>
 			</tr>
 		</tbody>
 	</table>

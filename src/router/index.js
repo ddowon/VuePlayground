@@ -39,13 +39,20 @@ router.beforeEach((to, from, next) => {
 
 	// 관리자 페이지 접근 시 네비게이션 가드 처리
 	if (isRequireAuth) {
-		if (!store.getters['auth/isLogged'] || store.getters['auth/currentUser'].role !== 'admin') {
+		if(!store.getters['auth/isLogged']){
+			store.dispatch('ui/toast', { message: '로그인 해 주세요.' })
+			store.dispatch('ui/setSignIn')
+			return
+		}
+
+		if (store.getters['auth/currentUser'].role !== 'admin') {
 			store.dispatch('ui/toast', { message: '관리자만 접근 가능합니다.' })
 			if (!from.name) {
 				next({ name: 'home' })
 			}
 			return
-		}
+		} 
+
 		next()
 	} else { 
 		next()

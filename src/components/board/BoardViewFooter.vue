@@ -2,17 +2,23 @@
 	<Fragment>
 		<div class="tbl_other">
 			<ul>
-				<li class="prev">
+				<li class="prev" v-if="prevItem">
 					<strong>이전글</strong>
 					<span>
-						<a href="/noticeView/6">제56회 백상예술대상 레드카펫 생중계 안내</a>
+						<router-link :to="{ name: `${routeName}_view`, params: { 'id': prevItem.id } }">
+							{{ prevItem.title }}
+						</router-link>
 					</span>
+					<span class="cnt_comment">{{ `[${prevItem.cnt.comment}]` }}</span>
 				</li>
-				<li class="next">
+				<li class="next" v-if="nextItem">
 					<strong>다음글</strong>
 					<span>
-						<a href="/noticeView/6">도원님 이것은 다음글입니다요?</a>
+						<router-link :to="{ name: `${routeName}_view`, params: { 'id': nextItem.id } }">
+							{{ nextItem.title }}
+						</router-link>
 					</span>
+					<span class="cnt_comment">{{ `[${nextItem.cnt.comment}]` }}</span>
 				</li>
 			</ul>
 		</div>
@@ -21,9 +27,9 @@
 			ex) 2페이지의 7번글 클릭 -> 하단 목록 버튼 클릭 -> 1페이지가 아닌 /notice/list/2로 이동
 		-->
 		<div class="button">
-			<a class="box-btn" href="/notice/list/1">
+			<router-link :to="{ name: `${routeName}_list`, params: { 'page': currentPage } }" class="box-btn">
 				<span>목록</span>
-			</a>
+			</router-link>
 		</div>
 	</Fragment>
 </template>
@@ -37,6 +43,7 @@ export default {
 	components: {
 		Fragment
 	},
+	props: [ 'routeName', 'prevItem', 'nextItem' ],
 	data: () => ({
 	}),
 	watch: {
@@ -49,7 +56,7 @@ export default {
 		// state는 vuex의 getters를 이용해 가져옵니다.
 		// 가져온 vuex page값을 <template> 목록 버튼에 <router-link>에 삽입하면 끝..?
 		////////////////////////////////////////////////////////////////////////////////
-
+		...mapGetters('notices', [ 'currentPage' ])
 	},
 	methods: {
 	}

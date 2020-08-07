@@ -28,10 +28,8 @@
 
 			근데 사용자가 보기 불편하니까 백단에서 새로운 게시글이 작성될 때마다
 			직전 게시글 번호 +1을 해서 0부터 n까지 고유키를 자동 증가시켜주는 거예요. -->
-
-
-			<BoardViewFooter />
-			<BoardViewComments :pr_id="item.id" :comments="item.comments" @forceKeyUpdate="changeRefreshKey" />
+			<BoardViewFooter :routeName="routeName" :prevItem="item.prevItem" :nextItem="item.nextItem" />
+			<BoardViewComments :pr_id="item.id" :key="refreshKey" :comments="item.comments" />
 		</template>
 	</div>
 </template>
@@ -49,7 +47,7 @@ export default {
 	components: {
 		BoardViewHeader, BoardViewContents, BoardViewFooter, BoardViewComments
 	},
-	props: [ 'id' ],
+	props: [ 'id', 'routeName' ],
 	data: () => ({
 	}),
 	watch: {
@@ -61,20 +59,25 @@ export default {
 			},
 			deep: true,
 			immediate: true
+		},
+		'refreshKey' : {
+			handler(newVal, oldVal){
+				if (newVal !== oldVal){
+					this.fetchItemById(this.id)
+				}
+			}
 		}
 	},
 	computed: {
 		...mapGetters('auth', [ 'token', 'currentUser', 'isLogged' ]),
-		...mapGetters('notices', [ 'item' ])
+		...mapGetters('notices', [ 'item', 'refreshKey' ])
 	},
 	created() {
 		this.fetchItemById(this.id)
 	},
 	methods: {
-		changeRefreshKey() {
-			this.fetchItemById(this.id)
-		},
 		fetchItemById(id = 1) {
+
 			// 블로그 글이랑은 좀 다른데요..
 			// 라우트에서 동일 url로 이동하는 건 history API pushstate 정책 위반이래요.. ㅠㅠ
 			// 그래서 push 에러를 없애봤는데 재이동은 안되는 걸로 판명나서

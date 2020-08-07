@@ -2,15 +2,15 @@
 	<div class="tlb-wrap">
 		<div class="container-inner">
 			<BoardList 
-				:info="noticeInfo" :itemsList="itemsList"/>
+				:info="boardInfo" :itemsList="itemsList"/>
 			<BoardListPagination 
 				:totalPage="totalPageCount"
-				:pageRange="noticeInfo.pageRange"
-				:currentPage="page"
-				@changePaging="chagePage" />
+				:pageRange="boardInfo.pageRange"
+				:currentPage="currentPage"
+				@changePaging="changePage" />
 
 			<div class="button">
-				<router-link :to="{ name: 'notice_add' }" class="box-btn">
+				<router-link :to="{ name: `${boardInfo.routeName}_add` }" class="box-btn">
 					<span>글쓰기</span>
 				</router-link>
 			</div>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-const API_URI = (window.location.protocol === 'https:') ? process.env.VUE_APP_HTTPS_API_URI : process.env.VUE_APP_API_URI
+
 import { mapActions, mapGetters } from 'vuex'
 
 import BoardList from '@/components/board/BoardList.vue'
@@ -30,9 +30,9 @@ export default {
 	components: {
 		BoardList, BoardListPagination
 	},
-	props: [ 'page' ],
 	data: () => ({
-		noticeInfo: {
+		currentPage: null,
+		boardInfo: {
 			title: '공지사항',
 			routeName: 'notice',
 			itemPerPage: 5,
@@ -40,10 +40,10 @@ export default {
 		}
 	}),
 	watch: {
-		'$route.params': {
+		'$route.query': {
 			handler(newVal, oldVal) {
 				if (newVal && oldVal) {
-					this.noticeList(this.page, this.noticeInfo.itemPerPage)
+					this.fetchListByPageSize(this.$route.query.page, this.boardInfo.itemPerPage)
 				}
 			},
 			deep: true,
@@ -56,19 +56,21 @@ export default {
 		)
 	},
 	created() {
-		this.noticeList(this.page, this.noticeInfo.itemPerPage)
+		this.fetchListByPageSize(this.$route.query.page, this.boardInfo.itemPerPage)
 	},
 	methods: {
-		noticeList(pageNum, size = 10) {
-			this.$store.dispatch('notices/noticeList', {
+		fetchListByPageSize(pageNum, size = 10) {
+			this.currentPage = Number(pageNum)
+			this.$store.dispatch('notices/fetchListByPageSize', {
 				pageNum: pageNum,
 				size: size
 			})
 		},
-		chagePage(pageNum) {
+		changePage(pageNum) {
+			// this.page = pageNum
 			this.$router.push({
-				name: `${this.noticeInfo.routeName}_list`,
-				params: { 'page': pageNum }
+				name: `${this.boardInfo.routeName}_list`,
+				query: { 'page': pageNum }
 			})
 		}
 	}

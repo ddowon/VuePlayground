@@ -29,20 +29,14 @@ const mutations = {
 	},
 	SET_CNT_DISLIKE(state, cnt) {
 		state.cntDislike = cnt
-	},
-	SET_LIKE_STAUTS() {
-		state.isLikeSuccess = true
-	},
-	SET_DISLIKE_STAUTS() {
-		state.isDislikeSuccess = true
 	}
 }
 
 const actions = {
 	// 게시판 목록 불러오기
-	async noticeList({ commit, dispatch }, payload) {
+	async fetchListByPageSize({ commit, dispatch }, payload) {
 		try {
-			const res = await NOTICES.noticeList(payload)
+			const res = await NOTICES.fetchListByPageSize(payload)
 			if (res.data) {
 				commit('SET_TOTALPAGE_COUNT', res.data.totalPageCount)
 				commit('SET_NOTICE_ITEMLIST', res.data.itemsList)
@@ -81,8 +75,7 @@ const actions = {
 				router.push({ name: 'notice_view', params: { id: res.data.id } })
 			} 
 		} catch (err) {
-			console.error(err.response.data.message)
-			// dispatch('ui/toast', { message: err }, { root: true })
+			dispatch('ui/toast', { message: err }, { root: true })
 		}
 	},
 	// 게시글 삭제
@@ -90,31 +83,31 @@ const actions = {
 		try {
 			const res = await NOTICES.removeItem(id)
 			if (res.data) {
-				// TODO: 삭제 후 얼럿 추가
-				// dispatch('ui/toast', { message: res.data.message }, { root: true })
+				dispatch('ui/toast', { message: '게시글이 삭제되었습니다.' }, { root: true })
 				router.push({ name: 'notice_list', params: { page: '1' }})
 			} 
 		} catch (err) {
 			dispatch('ui/toast', { message: err }, { root: true })
 		}
 	},
-	//추천
-	async like({ commit, dispatch }, id) {
+	//게시글 추천
+	async likeItem({ commit, dispatch }, id) {
 		try {
-			const res = await NOTICES.like(id)
+			const res = await NOTICES.likeItem(id)
 			if (res.data) {
-				commit('SET_LIKE_STAUTS')
-				dispatch('ui/toast', { message: res.data.message }, { root: true })	
+				console.log(res.data)
+				// commit('SET_CNT_LIKE')
+				// dispatch('ui/toast', { message: res.data.message }, { root: true })	
 			}
 			
 		} catch (err) {
-			dispatch('ui/toast', { message: err }, { root: true })	
+			// dispatch('ui/toast', { message: err }, { root: true })	
 		}
 	},
-	//비추천
-	async dislike({ commit, dispatch }, id) {
+	//게시글 비추천
+	async dislikeItem({ commit, dispatch }, id) {
 		try {
-			const res = await NOTICES.dislike(id)
+			const res = await NOTICES.dislikeItem(id)
 			if (res.data) {
 				commit('SET_DISLIKE_STAUTS')
 				dispatch('ui/toast', { message: res.data.message }, { root: true })	
@@ -135,10 +128,22 @@ const actions = {
 			dispatch('ui/toast', { message: err }, { root: true })
 		}
 	},
-	// TODO: 댓글 삭제
+	// 댓글 삭제
 	async removeComment({ commit, dispatch }, payload) {
 		try {
 			const res = await NOTICES.removeComment(payload)
+			if (res) {
+				commit('SET_REFRESHKEY')
+				dispatch('ui/toast', { message: "댓글이 삭제되었습니다." }, { root: true })
+			}
+		} catch (err) {
+			dispatch('ui/toast', { message: err }, { root: true })
+		}
+	},
+	// 댓글 수정
+	async updateComment({ commit, dispatch }, payload) {
+		try {
+			const res = await NOTICES.updateComment(payload)
 			if (res) {
 				commit('SET_REFRESHKEY')
 			}
@@ -174,6 +179,7 @@ const actions = {
 const getters = {
 	refreshKey: (state) => state.refreshKey,
 	totalPageCount: (state) => state.totalPageCount,
+	latestItemsList: (state) => state.latestItemsList,
 	itemsList: (state) => state.itemsList,
 	item: (state) => state.item,
 	isLikeSuccess: (state) => state.isLikeSuccess,

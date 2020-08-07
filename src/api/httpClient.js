@@ -2,6 +2,7 @@ import axios from 'axios'
 import { cacheAdapterEnhancer, throttleAdapterEnhancer } from 'axios-extensions'
 import httpStatusCode from '~/httpStatusCode'
 import store from '@/store'
+import { appLocalStorage } from '@/utils/storage'
 
 const API_URI = (window.location.protocol === 'https:') ? process.env.VUE_APP_HTTPS_API_URI : process.env.VUE_APP_API_URI
 
@@ -33,6 +34,11 @@ const isHandlerEnabled = (config = {}) => {
 const requestInterceptor = (config) => {
 	if (store.getters['auth/token']) {
 		config.headers['x-access-token'] = store.getters['auth/token']
+	} else {
+		let token = appLocalStorage.getItem('bs_token')
+		if (token) {
+			config.headers['x-access-token'] = token
+		}
 	}
 
 	return config

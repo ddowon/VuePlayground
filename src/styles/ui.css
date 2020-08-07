@@ -22,7 +22,7 @@ caption, legend, .blind{position:absolute;top:-9999em;height:0;overflow:hidden;v
 button{overflow:visible;margin:0;padding:0;border:0;background:none;white-space:nowrap;cursor:pointer;}
 button::-moz-focus-inner{padding:0;border:0;}
 button span{position:relative;}
-textarea, input {-webkit-appearance: none; -webkit-border-radius: 0;}
+textarea, input {-webkit-appearance: none; -webkit-border-radius: 0;resize:none;}
 
 /* common */
 .loaded .main-page a.box-btn span,

@@ -43,10 +43,10 @@
 								<span>목록</span>
 							</router-link>
 							<template v-if="!item">
-								<a href="#" class="box-btn primary" @click.prevent="addNotice"><span>글쓰기</span></a>
+								<a href="#" class="box-btn primary" @click.prevent="addItem"><span>글쓰기</span></a>
 							</template>
 							<template v-else>
-								<a href="#" class="box-btn primary" @click.prevent="updateNotice(item.id)"><span>글수정</span></a>
+								<a href="#" class="box-btn primary" @click.prevent="updateItem(item.id)"><span>글수정</span></a>
 							</template>
 						</div>
 					</div>
@@ -96,7 +96,7 @@ export default {
 			this.images = this.$refs.boardImage.files[0]
 		},
 		// 글쓰기를 구현해 보세요옹 (얄미운 옹)
-		addNotice() {
+		addItem() {
 			// 이렇게 데이터를 묶어서!
 			const formData = new FormData()
 			formData.append('title', this.title)
@@ -105,7 +105,7 @@ export default {
 
 			this.$store.dispatch('notices/addItem', formData)
 		},
-		updateNotice(id){
+		updateItem(id){
 			const formData = new FormData()
 			formData.append('title', this.title)
 			formData.append('contents', this.contents)

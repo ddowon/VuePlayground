@@ -76,17 +76,16 @@ const routes = [
 		name: 'notice',
 		meta: { title: '공지사항' },
 		component: Notice,
-		redirect: { name: 'notice_list', params: { page: '1' } },
+		redirect: { name: 'notice_list', query: { page: '1' } },
 		children: [
 			{
 				// path: '/notice/list/:page' 와 동일 (notice_list_page를 page로 줄여 쓴 이유는 이미 라우트 path에서 notice/list로 경로를 특정하고 있기 때문 - 동어반복이라 page로 줄임)
 				// props: true 설정 시 route.params 정보를 설정한 컴포넌트의 props에 할당할 수 있음
 				// 즉, NoticeList 컴포넌트에서 부모-자식 컴포넌트의 관계처럼 props: [ 'page' ]를 사용하면 this.$route.params.page와 동일한 값을 this.page로 축약 사용할 수 있음
-				path: 'list/:page',
+				path: 'list',
 				name: 'notice_list',
 				meta: { title: '공지사항 글 목록' },
-				component: NoticeList,
-				props: true
+				component: NoticeList
 			},
 			{
 				// path: '/notice/view/:id' 와 동일
